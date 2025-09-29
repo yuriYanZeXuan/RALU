@@ -13,7 +13,7 @@ def main(args):
     if args.model_type == 'flux':
         # --- FLUX Model Logic ---
         pipe = FluxPipeline_RALU.from_pretrained(
-            "black-forest-labs/FLUX.1-dev",
+            args.flux_model_path,
             torch_dtype=torch_dtype
         ).to(device)
 
@@ -44,7 +44,7 @@ def main(args):
     elif args.model_type == 'qwen':
         # --- QwenImage Model Logic (with diffusers) ---
         pipe = QwenImagePipelineRALU.from_pretrained(
-            "Qwen/Qwen-Image-Edit",
+            args.qwen_edit_path,
             torch_dtype=torch_dtype
         ).to(device)
 
@@ -96,6 +96,8 @@ if __name__ == "__main__":
     parser.add_argument('--guidance_scale', type=float, default=4.0, help='Guidance scale (CFG).')
     parser.add_argument('--num_inference_steps', type=int, default=50, help='Number of denoising steps.')
     parser.add_argument('--seed', type=int, default=42, help='Random seed for generation.')
+    parser.add_argument('--flux_model_path', type=str, default='/mnt/tidalfs-bdsz01/usr/tusen/yanzexuan/weight/flux', help='Path to the FLUX model.')
+    parser.add_argument('--qwen_edit_path', type=str, default='/mnt/tidalfs-bdsz01/usr/tusen/yanzexuan/weight/QwenEdit', help='Path to the QwenEdit model.')
 
     # RALU arguments
     parser.add_argument('--use_ralu', action='store_true', help='Enable RALU acceleration.')
@@ -109,7 +111,6 @@ if __name__ == "__main__":
 
     # Qwen-specific arguments
     parser.add_argument('--edit_image_path', type=str, help='(Qwen only) Path to the input image to be edited.')
-    parser.add_argument('--qwen_edit_path', type=str, help='(Qwen only) Optional path to custom QwenEdit LoRA weights.')
 
 
     args = parser.parse_args()
